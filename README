@@ -1,77 +1,60 @@
-Route and Fuel Stop API
+# Route and Fuel Stop API
 
 This project is an API that calculates the optimal route between a start and finish location within the USA, providing fuel stop recommendations along the way based on the most cost-effective fuel prices. It assumes the vehicle has a maximum range of 500 miles and achieves 10 miles per gallon. The API also returns the total cost of fuel based on the calculated route.
-Features
 
-    Route Calculation: Computes the best driving route between a start and finish location using the OpenRouteService API.
-    Fuel Stops: Suggests fuel stations along the route based on the most cost-effective prices found in a CSV file of fuel prices.
-    Total Fuel Cost: Calculates the total cost of fuel based on the vehicle's fuel efficiency and route distance.
-    Route Map: Provides a URL to view the route on a map.
+## Features
 
-Setup
-Requirements
+- **Route Calculation**: Computes the best driving route between a start and finish location using the OpenRouteService API.
+- **Fuel Stops**: Suggests fuel stations along the route based on the most cost-effective prices found in a CSV file of fuel prices.
+- **Total Fuel Cost**: Calculates the total cost of fuel based on the vehicle's fuel efficiency and route distance.
+- **Route Map**: Provides a URL to view the route on a map.
 
-    Python 3.x
-    Django
-    Django Rest Framework
-    OpenRouteService API Key (You can obtain it from OpenRouteService)
-    A CSV file containing fuel price data (fuel-prices-for-be-assessment.csv)
+## Setup
 
-Installation
+### Requirements
 
-    Clone the repository:
+- Python 3.x
+- Django
+- Django Rest Framework
+- OpenRouteService API Key (You can obtain it from [OpenRouteService](https://openrouteservice.org/sign-up/))
+- A CSV file containing fuel price data (`fuel-prices-for-be-assessment.csv`)
 
-git clone <repository-url>
+### Installation
 
-Install the required packages:
+1. Clone the repository:
+    ```bash
+    git clone <repository-url>
+    ```
 
-pip install -r requirements.txt
+2. Install the required packages:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-Add your OpenRouteService API key to your Django settings:
-
+3. Add your OpenRouteService API key to your Django settings:
+    ```python
     OPENROUTESERVICE_API_KEY = '<your-api-key>'
+    ```
 
-    Ensure that the fuel-prices-for-be-assessment.csv file is placed in the data/ folder inside your project directory.
+4. Ensure that the `fuel-prices-for-be-assessment.csv` file is placed in the `data/` folder inside your project directory.
 
-File Structure
 
-project/
-│
-├── data/
-│   └── fuel-prices-for-be-assessment.csv
-│
-├── your_app/
-│   ├── views.py
-│   ├── serializers.py
-│   ├── utils.py
-│   └── ...
-│
-├── settings.py
-└── ...
+## API Usage
 
-API Usage
-Endpoint
+### Endpoint
 
-    POST /api/route/: This endpoint accepts a JSON request with the start and finish coordinates and returns the optimal route with fuel stops and the total fuel cost.
+- **POST /api/route/**: This endpoint accepts a JSON request with the start and finish coordinates and returns the optimal route with fuel stops and the total fuel cost.
 
-Request Body
+### Request Body
 
+```json
 {
     "start_location": [latitude, longitude], 
     "finish_location": [latitude, longitude]
 }
 
-    start_location: The latitude and longitude of the starting point.
-    finish_location: The latitude and longitude of the destination point.
-
-Example Request
-
-{
-    "start_location": [-23.5505, -46.6333], 
-    "finish_location": [-22.9068, -43.1729]
-}
-
-Example Response
+start_location: The latitude and longitude of the starting point.
+finish_location: The latitude and longitude of the destination point.
 
 {
     "route_map": "https://maps.openrouteservice.org/directions/-46.6333,-23.5505:-43.1729,-22.9068",
@@ -87,7 +70,17 @@ Example Response
     ],
     "total_cost": 25.5
 }
-
-    route_map: A link to view the route on the OpenRouteService map.
-    fuel_stops: A list of fuel stations along the route, including the name, address, price per gallon, and the cost to refuel.
-    total_cost: The total fuel cost for the trip.
+{
+    "route_map": "https://maps.openrouteservice.org/directions/-46.6333,-23.5505:-43.1729,-22.9068",
+    "fuel_stops": [
+        {
+            "name": "Station A",
+            "address": "Address 1",
+            "city": "City A",
+            "state": "State A",
+            "price_per_gallon": 3.45,
+            "cost": 25.5
+        }
+    ],
+    "total_cost": 25.5
+}
